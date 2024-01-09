@@ -4,7 +4,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-// Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Blog_Project;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

@@ -15,7 +15,7 @@ namespace DataLibrary.DataAccess
     {
         public static string GetConnectionString(string connectionName = "Blog_Project")
         {
-            return "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Blog_Project;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
+            return "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Blog_Project;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         }
 
         public static List<T> LoadData<T> (string sql) 
@@ -25,7 +25,6 @@ namespace DataLibrary.DataAccess
                 return cnn.Query<T>(sql).ToList();
             }
         }
-        // https://youtu.be/bIiEv__QNxw?t=3107
         public static int SaveData<T>(string sql, T data)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))

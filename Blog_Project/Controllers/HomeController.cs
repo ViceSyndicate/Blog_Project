@@ -1,6 +1,8 @@
 using Blog_Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using DataLibrary;
+using DataLibrary.BusinessLogic;
 
 namespace Blog_Project.Controllers
 {
@@ -41,6 +43,9 @@ namespace Blog_Project.Controllers
         {
             if (ModelState.IsValid)
             {
+                UserProcessor.CreateUser(
+                    model.Username, 
+                    model.Password);
                 return RedirectToAction("Index");
             }
 

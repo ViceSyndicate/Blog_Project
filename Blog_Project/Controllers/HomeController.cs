@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using DataLibrary;
 using DataLibrary.BusinessLogic;
+using DataLibrary.Model;
 
 namespace Blog_Project.Controllers
 {
@@ -30,6 +31,26 @@ namespace Blog_Project.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public ActionResult ViewUsers()
+        {
+            ViewBag.Message = "User List";
+            // I create a list of DataLibrary users because I want the GUID value.
+            var data = UserProcessor.LoadUsers();
+            List<DataLibrary.Model.User> users = new List<DataLibrary.Model.User>();
+
+            foreach (var row in data)
+            {
+                users.Add(new DataLibrary.Model.User
+                {
+                    UserId = row.UserId,
+                    Username = row.Username,
+                });
+            }
+
+            return View(users);
+        }
+
         public IActionResult SignUp()
         {
             ViewBag.Message = "Sign Up Page";
@@ -39,7 +60,7 @@ namespace Blog_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignUp(User model)
+        public IActionResult SignUp(Models.User model)
         {
             if (ModelState.IsValid)
             {

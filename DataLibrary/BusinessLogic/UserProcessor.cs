@@ -13,7 +13,7 @@ namespace DataLibrary.BusinessLogic
         public static int CreateUser(string username, string password)
         {
             User data = new User();
-            data.UserId = 0; // Generate UUID later.
+            data.UserId = Guid.NewGuid().ToString();
             data.Username = username;
             data.Password = password;
 
@@ -23,7 +23,7 @@ namespace DataLibrary.BusinessLogic
         }
         public static List<User> LoadUsers()
         {
-            string sql = @"select UserId, Username, Password from dbo.User";
+            string sql = @"SELECT UserId, Username, Password from dbo.[User]";
 
             return SqlDataAccess.LoadData<User>(sql);
         }

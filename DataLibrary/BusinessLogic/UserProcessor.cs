@@ -12,20 +12,20 @@ namespace DataLibrary.BusinessLogic
     {
         public static int CreateUser(string username, string password)
         {
-            User data = new User();
-            data.UserId = Guid.NewGuid().ToString();
+            Models.User data = new Models.User();
+            data.Id = Guid.NewGuid().ToString();
             data.Username = username;
             data.Password = password;
 
-            string sql = "INSERT INTO dbo.[User] (UserId, Username, Password) VALUES (@UserId, @Username, @Password)";
+            string sql = "INSERT INTO dbo.[User] (Id, Username, Password) VALUES (@Id, @Username, @Password)";
 
             return SqlDataAccess.SaveData(sql, data);
         }
-        public static List<User> LoadUsers()
+        public static List<Models.User> LoadUsers()
         {
-            string sql = @"SELECT UserId, Username, Password from dbo.[User]";
+            string sql = @"SELECT Id, Username, Password from dbo.[User]";
 
-            return SqlDataAccess.LoadData<User>(sql);
+            return SqlDataAccess.LoadData<Models.User>(sql);
         }
     }
 }

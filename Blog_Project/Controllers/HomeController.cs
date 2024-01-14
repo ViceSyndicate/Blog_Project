@@ -43,7 +43,7 @@ namespace Blog_Project.Controllers
             {
                 users.Add(new DataLibrary.Model.User
                 {
-                    UserId = row.UserId,
+                    Id = row.Id,
                     Username = row.Username,
                 });
             }

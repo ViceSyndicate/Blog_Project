@@ -7,7 +7,7 @@ namespace Blog_Project.Models
     {
 
         [Required(ErrorMessage = "Please prodive a Username")]
-        [StringLength(32, MinimumLength = 2, ErrorMessage = "Username needs to be 2-32 characters")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Username needs to be 2-10 characters")]
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Please prodive a Password")]

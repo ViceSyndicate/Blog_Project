@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using DataLibrary;
 using DataLibrary.BusinessLogic;
-using DataLibrary.Model;
+using DataLibrary.Models;
 
 namespace Blog_Project.Controllers
 {
@@ -37,11 +37,11 @@ namespace Blog_Project.Controllers
             ViewBag.Message = "User List";
             // I create a list of DataLibrary users because I want the GUID value.
             var data = UserProcessor.LoadUsers();
-            List<DataLibrary.Model.User> users = new List<DataLibrary.Model.User>();
+            List<DataLibrary.Models.User> users = new List<DataLibrary.Models.User>();
 
             foreach (var row in data)
             {
-                users.Add(new DataLibrary.Model.User
+                users.Add(new DataLibrary.Models.User
                 {
                     Id = row.Id,
                     Username = row.Username,

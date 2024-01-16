@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLibrary.DataAccess
 {
-    internal class EFBlogContext : DbContext
+    public class EFBlogContext : DbContext
     {
         public DbSet<Models.User> Users { get; set; } = null!;
         public DbSet<Models.Post> Posts { get; set; } = null!;

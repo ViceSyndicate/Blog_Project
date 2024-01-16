@@ -14,8 +14,5 @@ namespace DataLibrary.BusinessLogic
         public EFDataProcessor() {
             _dbContext = new EFBlogContext();
         }
-
-        // Create DB calls using _dbContext
-        // Return data to Blog_Project Controllers.
     }
 }

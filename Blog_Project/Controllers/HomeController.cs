@@ -64,9 +64,18 @@ namespace Blog_Project.Controllers
         {
             if (ModelState.IsValid)
             {
+                /*
                 UserProcessor.CreateUser(
                     model.Username, 
                     model.Password);
+                */
+                DataLibrary.Models.User user = new DataLibrary.Models.User();
+                user.Id = Guid.NewGuid().ToString();
+                user.Username = model.Username;
+                user.Password = model.Password;
+                using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
+                context.Users.Add(user);
+                context.SaveChanges();
                 return RedirectToAction("Index");
             }
 

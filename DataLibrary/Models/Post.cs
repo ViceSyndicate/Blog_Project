@@ -11,11 +11,10 @@ namespace DataLibrary.Models
 {
     public class Post
     {
-        [Key]
         public string Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public User User{ get; set; }
+        public required User User{ get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
     }
 }

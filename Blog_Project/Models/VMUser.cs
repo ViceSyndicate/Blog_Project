@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Blog_Project.Models
 {
-    public class User //: IdentityUser
+    public class VMUser
     {
 
         [Required(ErrorMessage = "Please prodive a Username")]

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using DataLibrary;
 using DataLibrary.BusinessLogic;
 using DataLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blog_Project.Controllers
 {
@@ -31,7 +32,7 @@ namespace Blog_Project.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
+        /*
         public ActionResult ViewUsers()
         {
             ViewBag.Message = "User List";
@@ -50,7 +51,7 @@ namespace Blog_Project.Controllers
 
             return View(users);
         }
-
+        */
         public IActionResult SignUp()
         {
             ViewBag.Message = "Sign Up Page";
@@ -60,7 +61,7 @@ namespace Blog_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignUp(Models.User model)
+        public IActionResult SignUp(Models.VMUser model)
         {
             if (ModelState.IsValid)
             {
@@ -71,8 +72,9 @@ namespace Blog_Project.Controllers
                 */
                 DataLibrary.Models.User user = new DataLibrary.Models.User();
                 user.Id = Guid.NewGuid().ToString();
-                user.Username = model.Username;
-                user.Password = model.Password;
+                user.UserName = model.Username;
+                user.PasswordHash = model.Password;
+                user.Created = DateTime.Now;
                 using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
                 context.Users.Add(user);
                 context.SaveChanges();
@@ -81,7 +83,14 @@ namespace Blog_Project.Controllers
 
             return View();
         }
-        // Do User logged in validation
+        public IActionResult Login()
+        {
+            ViewBag.Message = "Post Blog Page";
+
+            return View();
+        }
+        // Check User logged in
+        [Authorize]
         public IActionResult Post()
         {
             ViewBag.Message = "Post Blog Page";
@@ -90,6 +99,8 @@ namespace Blog_Project.Controllers
         }
         // TODO
         // Add Logged in verification
+        /*
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Post(Models.VMPost model)
@@ -110,5 +121,6 @@ namespace Blog_Project.Controllers
 
             return View();
         }
+        */
     }
 }

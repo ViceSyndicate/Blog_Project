@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataLibrary.DataAccess
 {
-    public class EFBlogContext : DbContext
+    public class EFBlogContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Models.User> Users { get; set; } = null!;
         public DbSet<Models.Post> Posts { get; set; } = null!;

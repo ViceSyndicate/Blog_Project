@@ -81,5 +81,34 @@ namespace Blog_Project.Controllers
 
             return View();
         }
+        // Do User logged in validation
+        public IActionResult Post()
+        {
+            ViewBag.Message = "Post Blog Page";
+
+            return View();
+        }
+        // TODO
+        // Add Logged in verification
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Post(Models.VMPost model)
+        {
+            if (ModelState.IsValid)
+            {
+                DataLibrary.Models.Post post = new DataLibrary.Models.Post();
+                post.Id = Guid.NewGuid().ToString();
+                post.Title = model.Title;
+                post.Content = model.Content;
+                post.Created = DateTime.Now;
+                // post.User = // Logged in users GUID
+                using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
+                context.Posts.Add(post);
+                context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
     }
 }

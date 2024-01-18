@@ -71,13 +71,13 @@ namespace Blog_Project.Controllers
                     model.Password);
                 */
                 DataLibrary.Models.User user = new DataLibrary.Models.User();
-                user.Id = Guid.NewGuid().ToString();
-                user.UserName = model.Username;
-                user.PasswordHash = model.Password;
-                user.Created = DateTime.Now;
-                using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
-                context.Users.Add(user);
-                context.SaveChanges();
+                //user.Id = Guid.NewGuid().ToString();
+                //user.UserName = model.Username;
+                //user.PasswordHash = model.Password;
+                //user.Created = DateTime.Now;
+                //using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
+                //context.Users.Add(user);
+                //context.SaveChanges();
                 return RedirectToAction("Index");
             }
 

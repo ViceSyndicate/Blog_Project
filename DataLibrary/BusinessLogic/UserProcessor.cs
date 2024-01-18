@@ -13,9 +13,9 @@ namespace DataLibrary.BusinessLogic
         public static int CreateUser(string username, string password)
         {
             Models.User data = new Models.User();
-            data.Id = Guid.NewGuid().ToString();
-            data.UserName = username;
-            data.PasswordHash = password;
+            //data.Id = Guid.NewGuid().ToString();
+            //data.UserName = username;
+            //data.PasswordHash = password;
 
             string sql = "INSERT INTO dbo.[User] (Id, Username, Password) VALUES (@Id, @Username, @Password)";
 

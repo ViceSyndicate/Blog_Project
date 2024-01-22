@@ -5,6 +5,7 @@ using DataLibrary;
 using DataLibrary.BusinessLogic;
 using DataLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
+using Blog_Project.Areas.Identity.Pages.Account;
 
 namespace Blog_Project.Controllers
 {
@@ -55,8 +56,16 @@ namespace Blog_Project.Controllers
         public IActionResult SignUp()
         {
             ViewBag.Message = "Sign Up Page";
+            //RegisterModel model = new DataLibrary.Models.VMUser();
+            ViewData["Title"] = "Title";
 
-            return View();
+            return View("/Identity/Account/Register");
+            // this ViewDataDictionary instance requires a model item of type
+            // 'Blog_Project.Areas.Identity.Pages.Account.RegisterModel'.
+            // https://localhost:44379/Identity/Account/Login?ReturnUrl=%2FHome%2FPost
+
+            // https://localhost:44379/Identity/Account/Register
+            // https://localhost:44379/Identity/Account/Login seems to work for login.
         }
 
         [HttpPost]

@@ -53,13 +53,20 @@ namespace Blog_Project.Controllers
             return View(users);
         }
         */
+
+        public IActionResult Register()
+        {
+            ViewData["Title"] = "Register";
+            return View("~/Areas/Identity/Pages/Account/Register.cshtml");
+        }
+
         public IActionResult SignUp()
         {
             ViewBag.Message = "Sign Up Page";
             //RegisterModel model = new DataLibrary.Models.VMUser();
             ViewData["Title"] = "Title";
 
-            return View("/Identity/Account/Register");
+            return View("/Identity/Account/Register.cshtml");
             // this ViewDataDictionary instance requires a model item of type
             // 'Blog_Project.Areas.Identity.Pages.Account.RegisterModel'.
             // https://localhost:44379/Identity/Account/Login?ReturnUrl=%2FHome%2FPost

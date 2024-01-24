@@ -28,6 +28,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignUp">Sign Up</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+                        </li>
                         <!-- I would like to only show this if user is logged in. -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Post">Post</a>
@@ -35,6 +38,7 @@
                     </ul>
                 </div>
             </div>
+            <partial name="_LoginPartial"/>
         </nav>
     </header>
     <div class="container">

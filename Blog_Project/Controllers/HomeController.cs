@@ -5,7 +5,6 @@ using DataLibrary;
 using DataLibrary.BusinessLogic;
 using DataLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
-using Blog_Project.Areas.Identity.Pages.Account;
 
 namespace Blog_Project.Controllers
 {

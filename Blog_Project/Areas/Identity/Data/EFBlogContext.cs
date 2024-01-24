@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataLibrary.DataAccess;
 
-public class EFBlogContext : IdentityDbContext<DataLibrary.Models.User>
+public class EFBlogContext : IdentityDbContext<IdentityUser>
 {
     public EFBlogContext(DbContextOptions<EFBlogContext> options)
         : base(options)

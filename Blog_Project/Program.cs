@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DataLibrary.DataAccess;
+using DataLibrary;
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("EFBlogContextConnection") ?? throw new InvalidOperationException("Connection string 'EFBlogContextConnection' not found.");
+//var connectionString = builder.Configuration.GetConnectionString("EFBlogContextConnection") ?? throw new InvalidOperationException("Connection string 'EFBlogContextConnection' not found.");
 
-builder.Services.AddDbContext<EFBlogContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<EFBlogContext>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<EFBlogContext>();
 

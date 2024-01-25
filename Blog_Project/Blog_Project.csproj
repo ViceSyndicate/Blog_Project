@@ -31,4 +31,8 @@
     <ProjectReference Include="..\DataLibrary\DataLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data\" />
+  </ItemGroup>
+
 </Project>

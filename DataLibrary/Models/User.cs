@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLibrary.Models
 {
+    [NotMapped]
     public class User : IdentityUser
     {
         //[Key]

@@ -54,7 +54,7 @@ namespace Blog_Project.Controllers
             var userId = claim.Value;
             if (userId == null) 
             {
-                // Couldn't find logged in user!
+                // Couldn't find logged in users id!
                 return Error();
             }
 

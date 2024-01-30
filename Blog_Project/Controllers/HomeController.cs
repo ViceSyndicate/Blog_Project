@@ -5,6 +5,7 @@ using DataLibrary;
 using DataLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using DataLibrary.DataAccess;
+using System.Security.Claims;
 
 namespace Blog_Project.Controllers
 {
@@ -46,19 +47,24 @@ namespace Blog_Project.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Post(DataLibrary.Models.Post model)
+        public IActionResult Post(Models.VMPost model)
         {
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+            if (userId == null) 
+            {
+                // Couldn't find logged in user!
+                return Error();
+            }
+
             if (ModelState.IsValid)
             {
                 DataLibrary.Models.Post newPost = new Post();
-
-                // We need to set newPost.UserId to logged in users id.
-                newPost.UserId = model.UserId;
-
+                newPost.UserId = userId;
                 newPost.Title = model.Title;
                 newPost.Content = model.Content;
-                //newPost.Created = DateTime.Now;
-                // I need to set the UserId value to the logged in users somehow...
+
                 EFBlogContext dbContext = new EFBlogContext();
                 dbContext.Add(newPost);
                 dbContext.SaveChanges();
@@ -66,30 +72,5 @@ namespace Blog_Project.Controllers
             }
             return View(); // send user to posts or something.
         }
-        // TODO
-        // Add Logged in verification
-        /*
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Post(Models.VMPost model)
-        {
-            if (ModelState.IsValid)
-            {
-                DataLibrary.Models.Post post = new DataLibrary.Models.Post();
-                post.Id = Guid.NewGuid().ToString();
-                post.Title = model.Title;
-                post.Content = model.Content;
-                post.Created = DateTime.Now;
-                // post.User = // Logged in users GUID
-                using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
-                context.Posts.Add(post);
-                context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View();
-        }
-        */
     }
 }

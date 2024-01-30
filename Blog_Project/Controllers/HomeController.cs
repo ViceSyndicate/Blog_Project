@@ -4,6 +4,7 @@ using System.Diagnostics;
 using DataLibrary;
 using DataLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
+using DataLibrary.DataAccess;
 
 namespace Blog_Project.Controllers
 {
@@ -31,85 +32,39 @@ namespace Blog_Project.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        /*
-        public ActionResult ViewUsers()
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Post()
         {
-            ViewBag.Message = "User List";
-            // I create a list of DataLibrary users because I want the GUID value.
-            var data = UserProcessor.LoadUsers();
-            List<DataLibrary.Models.User> users = new List<DataLibrary.Models.User>();
+            
+            ViewBag.Message = "Post Blog Page";
 
-            foreach (var row in data)
-            {
-                users.Add(new DataLibrary.Models.User
-                {
-                    Id = row.Id,
-                    Username = row.Username,
-                });
-            }
-
-            return View(users);
-        }
-        */
-
-        public IActionResult Register()
-        {
-            ViewData["Title"] = "Register";
-            return View("~/Areas/Identity/Pages/Account/Register.cshtml");
+            return View();
         }
 
-        public IActionResult SignUp()
-        {
-            ViewBag.Message = "Sign Up Page";
-            //RegisterModel model = new DataLibrary.Models.VMUser();
-            ViewData["Title"] = "Title";
-
-            return View("/Identity/Account/Register.cshtml");
-            // this ViewDataDictionary instance requires a model item of type
-            // 'Blog_Project.Areas.Identity.Pages.Account.RegisterModel'.
-            // https://localhost:44379/Identity/Account/Login?ReturnUrl=%2FHome%2FPost
-
-            // https://localhost:44379/Identity/Account/Register
-            // https://localhost:44379/Identity/Account/Login seems to work for login.
-        }
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignUp(Models.VMUser model)
+        public IActionResult Post(DataLibrary.Models.Post model)
         {
             if (ModelState.IsValid)
             {
-                /*
-                UserProcessor.CreateUser(
-                    model.Username, 
-                    model.Password);
-                */
-                DataLibrary.Models.User user = new DataLibrary.Models.User();
-                //user.Id = Guid.NewGuid().ToString();
-                //user.UserName = model.Username;
-                //user.PasswordHash = model.Password;
-                //user.Created = DateTime.Now;
-                //using DataLibrary.DataAccess.EFBlogContext context = new DataLibrary.DataAccess.EFBlogContext();
-                //context.Users.Add(user);
-                //context.SaveChanges();
+                DataLibrary.Models.Post newPost = new Post();
+
+                // We need to set newPost.UserId to logged in users id.
+                newPost.UserId = model.UserId;
+
+                newPost.Title = model.Title;
+                newPost.Content = model.Content;
+                //newPost.Created = DateTime.Now;
+                // I need to set the UserId value to the logged in users somehow...
+                EFBlogContext dbContext = new EFBlogContext();
+                dbContext.Add(newPost);
+                dbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            return View();
-        }
-        public IActionResult Login()
-        {
-            ViewBag.Message = "Post Blog Page";
-
-            return View();
-        }
-        // Check User logged in
-        [Authorize]
-        public IActionResult Post()
-        {
-            ViewBag.Message = "Post Blog Page";
-
-            return View();
+            return View(); // send user to posts or something.
         }
         // TODO
         // Add Logged in verification

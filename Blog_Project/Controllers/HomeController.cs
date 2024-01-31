@@ -37,12 +37,18 @@ namespace Blog_Project.Controllers
 
         [Authorize]
         [HttpGet]
+        public IActionResult AllPosts()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpGet]
         //[ValidateAntiForgeryToken]
         public IActionResult Posts()
         {
             if (ModelState.IsValid)
             {
-
                 ViewBag.Message = "Post Blog Page";
 
                 var claimsIdentity = (ClaimsIdentity)this.User.Identity;
@@ -51,7 +57,7 @@ namespace Blog_Project.Controllers
                 if (userId != null)
                 {
                     DataHandler dataHandler = new DataHandler();
-                    List<Post> userPosts = dataHandler.GetUsersPosts(userId);
+                    List<Post> userPosts = dataHandler.GetUserPosts(userId);
 
                     // Couldn't find logged in users id!
                     return View(userPosts);

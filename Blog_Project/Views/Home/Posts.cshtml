@@ -7,36 +7,14 @@
 <h1>Posts</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Post">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-        </tr>
+@foreach (var item in Model)
+{
+    <div class="myPost">
+        <p>@Html.DisplayFor(modelItem => item.Created) - @Html.DisplayFor(modelItem => item.Title)<p />
+        <textarea class="">
+            @Html.DisplayFor(modelItem => item.Content)
+        </textarea>
+    </div>
 }
-    </tbody>
-</table>

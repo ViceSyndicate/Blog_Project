@@ -11,7 +11,7 @@ namespace DataLibrary.DataHandler
     {
         EFBlogContext dbContext = new EFBlogContext();
 
-        public List<Models.Post> GetUsersPosts(string userId)
+        public List<Models.Post> GetUserPosts(string userId)
         {
             //List<Models.Post> usersPosts = new List<Models.Post>();
             List<Models.Post> usersPosts = dbContext.Posts.Where(p => p.UserId == userId).ToList();

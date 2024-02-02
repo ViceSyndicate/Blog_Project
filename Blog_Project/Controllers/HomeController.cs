@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using DataLibrary.DataAccess;
 using System.Security.Claims;
 using DataLibrary.DataHandler;
+using PagedList;
 
 namespace Blog_Project.Controllers
 {
@@ -47,6 +48,8 @@ namespace Blog_Project.Controllers
         //[ValidateAntiForgeryToken]
         public IActionResult Posts()
         {
+            //public IActionResult Posts(string sortOrder, int? page)
+            //ViewBag.CurrentSort = sortOrder;
             if (ModelState.IsValid)
             {
                 ViewBag.Message = "Post Blog Page";
@@ -59,9 +62,12 @@ namespace Blog_Project.Controllers
                     DataHandler dataHandler = new DataHandler();
                     List<Post> userPosts = dataHandler.GetUserPosts(userId);
 
-                    // Couldn't find logged in users id!
+                    //int pageSize = 3;
+                    //int pageNumber = (page ?? 1);
+                    //return View(userPosts.ToPagedList(pageNumber, pageSize));
                     return View(userPosts);
                 }
+                // Couldn't find logged in users id!
                 return Error();
             }
             return View();
@@ -80,14 +86,23 @@ namespace Blog_Project.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Post(DataLibrary.Models.Post model)
+        public IActionResult Post(Models.VMPost model)
         {
             if (ModelState.IsValid)
             {
                 DataLibrary.Models.Post newPost = new Post();
 
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                var userId = claim.Value;
+                if (userId == null)
+                {
+                    // Couldn't find logged in user!
+                    return Error();
+                }
+
                 // We need to set newPost.UserId to logged in users id.
-                newPost.UserId = model.UserId;
+                newPost.UserId = userId;
 
                 newPost.Title = model.Title;
                 newPost.Content = model.Content;

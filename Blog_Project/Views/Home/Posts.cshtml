@@ -1,4 +1,6 @@
-﻿@model IEnumerable<DataLibrary.Models.Post>
+﻿@model PaginatedList<DataLibrary.Models.Post>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<!--  -->
 
 @{
     ViewData["Title"] = "Posts";
@@ -7,14 +9,55 @@
 <h1>Posts</h1>
 
 <p>
-    <a asp-action="Post">Create New</a>
+    <a asp-action="Create">Create New</a>
 </p>
-@foreach (var item in Model)
-{
-    <div class="myPost">
-        <p>@Html.DisplayFor(modelItem => item.Created) - @Html.DisplayFor(modelItem => item.Title)<p />
-        <textarea class="">
-            @Html.DisplayFor(modelItem => item.Content)
-        </textarea>
-    </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Content
+            </th>
+            <th>
+                Created
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
 }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Posts"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Posts"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

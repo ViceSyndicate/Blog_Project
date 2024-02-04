@@ -8,6 +8,7 @@ using DataLibrary.DataAccess;
 using System.Security.Claims;
 using DataLibrary.DataHandler;
 using PagedList;
+using Blog_Project.Areas.Identity.Pages;
 
 namespace Blog_Project.Controllers
 {
@@ -46,31 +47,28 @@ namespace Blog_Project.Controllers
         [Authorize]
         [HttpGet]
         //[ValidateAntiForgeryToken]
-        public IActionResult Posts()
+        public async Task<IActionResult> Posts(string sortOrder, int? pageNumber)
         {
             //public IActionResult Posts(string sortOrder, int? page)
-            //ViewBag.CurrentSort = sortOrder;
-            if (ModelState.IsValid)
-            {
-                ViewBag.Message = "Post Blog Page";
+            ViewData["CurrentSort"] = sortOrder;
 
-                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
-                var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-                var userId = claim.Value;
-                if (userId != null)
-                {
-                    DataHandler dataHandler = new DataHandler();
-                    List<Post> userPosts = dataHandler.GetUserPosts(userId);
+            ViewBag.Message = "Post Blog Page";
 
-                    //int pageSize = 3;
-                    //int pageNumber = (page ?? 1);
-                    //return View(userPosts.ToPagedList(pageNumber, pageSize));
-                    return View(userPosts);
-                }
-                // Couldn't find logged in users id!
-                return Error();
-            }
-            return View();
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+
+            //DataHandler dataHandler = new DataHandler();
+            //List<Post> userPosts = dataHandler.GetUserPosts(userId);
+            DataLibrary.DataAccess.EFBlogContext _context = new DataLibrary.DataAccess.EFBlogContext();
+            var posts = from s in _context.Posts
+                           select s;
+
+            int pageSize = 3;
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.CreateAsync(posts, pageNumber ?? 1, pageSize);
+            return View(paginatedPosts);
+
+            //return View(dataHandler.GetUserPosts);
         }
 
         [Authorize]

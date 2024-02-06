@@ -11,6 +11,7 @@ using PagedList;
 using Blog_Project.Areas.Identity.Pages;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 
 namespace Blog_Project.Controllers
 {
@@ -41,9 +42,19 @@ namespace Blog_Project.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult AllPosts()
+        public IActionResult AllPosts(string sortOrder, int? pageNumber)
         {
-            return View();
+            DataHandler dataHandler = new DataHandler();
+            List<Post> allPosts = dataHandler.GetAllPosts();
+            int pageSize = 5;
+            int currentPageNumber = 0;
+            if(pageNumber != null) { currentPageNumber = (int)pageNumber; }
+
+            // PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(userPosts, pageNumber ?? 1, pageSize);
+            if (pageNumber == null) { pageNumber = 0; }
+            var paginatedPosts = PaginatedList<Post>.Create(allPosts, currentPageNumber, pageSize);
+            string paginatedPostType = paginatedPosts.GetType().Name;
+            return View(allPosts);
         }
 
         [Authorize]
@@ -69,7 +80,7 @@ namespace Blog_Project.Controllers
             var posts = _context.Posts.Where(p => p.UserId == userId);
             string postsType = posts.GetType().ToString();
             // "Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[DataLibrary.Models.Post]"
-            //PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.CreateAsync(posts, pageNumber ?? 1, pageSize);
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.CreateAsync(posts, pageNumber ?? 1, pageSize);
             */
 
             int pageSize = 5;

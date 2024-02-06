@@ -9,6 +9,8 @@ using System.Security.Claims;
 using DataLibrary.DataHandler;
 using PagedList;
 using Blog_Project.Areas.Identity.Pages;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog_Project.Controllers
 {
@@ -49,7 +51,7 @@ namespace Blog_Project.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Posts(string sortOrder, int? pageNumber)
         {
-            //public IActionResult Posts(string sortOrder, int? page)
+            // Unused
             ViewData["CurrentSort"] = sortOrder;
 
             ViewBag.Message = "Post Blog Page";
@@ -58,14 +60,21 @@ namespace Blog_Project.Controllers
             var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
             var userId = claim.Value;
 
-            //DataHandler dataHandler = new DataHandler();
-            //List<Post> userPosts = dataHandler.GetUserPosts(userId);
-            DataLibrary.DataAccess.EFBlogContext _context = new DataLibrary.DataAccess.EFBlogContext();
-            var posts = from s in _context.Posts
-                           select s;
+            DataHandler dataHandler = new DataHandler();
+            List<Post> userPosts = dataHandler.GetUserPosts(userId);
 
-            int pageSize = 3;
-            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.CreateAsync(posts, pageNumber ?? 1, pageSize);
+            /*
+            Used in PaginatedList<Post>.CreateAsync
+            DataLibrary.DataAccess.EFBlogContext _context = new DataLibrary.DataAccess.EFBlogContext();
+            var posts = _context.Posts.Where(p => p.UserId == userId);
+            string postsType = posts.GetType().ToString();
+            // "Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[DataLibrary.Models.Post]"
+            //PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.CreateAsync(posts, pageNumber ?? 1, pageSize);
+            */
+
+            int pageSize = 5;
+            
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(userPosts, pageNumber ?? 1, pageSize);
             return View(paginatedPosts);
 
             //return View(dataHandler.GetUserPosts);

@@ -1,6 +1,5 @@
 ﻿@model PaginatedList<DataLibrary.Models.Post>
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<!--  -->
+<link href="~/css/styles.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewData["Title"] = "Posts";
@@ -11,41 +10,21 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Title
-            </th>
-            <th>
-                Content
-            </th>
-            <th>
-                Created
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <div class="center">
+        <h3>
+            @Html.DisplayFor(modelItem => item.Title)
+        </h3>
+        <h5>
+            @Html.DisplayFor(modelItem => item.Content)
+        </h5>
+        <p>
+            @Html.DisplayFor(modelItem => item.Created) - 
+            @Html.DisplayFor(modelItem => item.UserId)
+        </p>
+    </div>
 }
-    </tbody>
-</table>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";

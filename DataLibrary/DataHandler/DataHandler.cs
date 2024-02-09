@@ -27,5 +27,14 @@ namespace DataLibrary.DataHandler
             return postsToList;
 
         }
+        public void AddPost(Models.Post post)
+        {
+            if (post != null)
+            {
+                dbContext.Posts.Add(post);
+                dbContext.SaveChanges();
+                return;
+            }
+        }
     }
 }

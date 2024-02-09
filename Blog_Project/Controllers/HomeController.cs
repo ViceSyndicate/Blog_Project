@@ -42,19 +42,20 @@ namespace Blog_Project.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult AllPosts(string sortOrder, int? pageNumber)
+        public async Task<IActionResult> AllPosts(string sortOrder, int? pageNumber)
         {
-            DataHandler dataHandler = new DataHandler();
-            List<Post> allPosts = dataHandler.GetAllPosts();
-            int pageSize = 5;
-            int currentPageNumber = 0;
-            if(pageNumber != null) { currentPageNumber = (int)pageNumber; }
+            // Unused
+            ViewData["CurrentSort"] = sortOrder;
 
-            // PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(userPosts, pageNumber ?? 1, pageSize);
-            if (pageNumber == null) { pageNumber = 0; }
-            var paginatedPosts = PaginatedList<Post>.Create(allPosts, currentPageNumber, pageSize);
-            string paginatedPostType = paginatedPosts.GetType().Name;
-            return View(allPosts);
+            ViewBag.Message = "Post Blog Page";
+
+            DataHandler dataHandler = new DataHandler();
+            List<Post> posts = dataHandler.GetAllPosts();
+
+            int pageSize = 5;
+
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(posts, pageNumber ?? 1, pageSize);
+            return View(paginatedPosts);
         }
 
         [Authorize]
@@ -119,16 +120,18 @@ namespace Blog_Project.Controllers
                     return Error();
                 }
 
-                // We need to set newPost.UserId to logged in users id.
                 newPost.UserId = userId;
-
                 newPost.Title = model.Title;
                 newPost.Content = model.Content;
-                //newPost.Created = DateTime.Now;
-                // I need to set the UserId value to the logged in users somehow...
+
+                DataHandler dataHandler = new DataHandler();
+                dataHandler.AddPost(newPost);
+
+                /*
                 EFBlogContext dbContext = new EFBlogContext();
                 dbContext.Add(newPost);
                 dbContext.SaveChanges();
+                */
                 return RedirectToAction("Index");
             }
             return View(); // send user to posts or something.

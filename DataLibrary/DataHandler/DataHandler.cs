@@ -1,10 +1,5 @@
 ﻿using DataLibrary.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataLibrary.Models;
 
 namespace DataLibrary.DataHandler
 {
@@ -35,6 +30,11 @@ namespace DataLibrary.DataHandler
                 dbContext.SaveChanges();
                 return;
             }
+        }
+        public User GetUser(string id)
+        {
+            User user = dbContext.Users.Where(u => u.Id == id).FirstOrDefault();
+            return user;
         }
     }
 }

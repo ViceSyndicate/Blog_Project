@@ -1,17 +1,10 @@
 using Blog_Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using DataLibrary;
 using DataLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
-using DataLibrary.DataAccess;
 using System.Security.Claims;
 using DataLibrary.DataHandler;
-using PagedList;
-using Blog_Project.Areas.Identity.Pages;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Drawing.Printing;
 
 namespace Blog_Project.Controllers
 {
@@ -88,8 +81,6 @@ namespace Blog_Project.Controllers
             
             PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(userPosts, pageNumber ?? 1, pageSize);
             return View(paginatedPosts);
-
-            //return View(dataHandler.GetUserPosts);
         }
 
         [Authorize]
@@ -127,11 +118,6 @@ namespace Blog_Project.Controllers
                 DataHandler dataHandler = new DataHandler();
                 dataHandler.AddPost(newPost);
 
-                /*
-                EFBlogContext dbContext = new EFBlogContext();
-                dbContext.Add(newPost);
-                dbContext.SaveChanges();
-                */
                 return RedirectToAction("Index");
             }
             return View(); // send user to posts or something.

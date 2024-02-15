@@ -1,9 +1,10 @@
 using Blog_Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using DataLibrary;
-using DataLibrary.BusinessLogic;
-using DataLibrary.Model;
+using DataLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using DataLibrary.DataHandler;
 
 namespace Blog_Project.Controllers
 {
@@ -32,45 +33,94 @@ namespace Blog_Project.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public ActionResult ViewUsers()
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> AllPosts(string sortOrder, int? pageNumber)
         {
-            ViewBag.Message = "User List";
-            // I create a list of DataLibrary users because I want the GUID value.
-            var data = UserProcessor.LoadUsers();
-            List<DataLibrary.Model.User> users = new List<DataLibrary.Model.User>();
+            // Unused
+            ViewData["CurrentSort"] = sortOrder;
 
-            foreach (var row in data)
-            {
-                users.Add(new DataLibrary.Model.User
-                {
-                    UserId = row.UserId,
-                    Username = row.Username,
-                });
-            }
+            ViewBag.Message = "Post Blog Page";
 
-            return View(users);
+            DataHandler dataHandler = new DataHandler();
+            List<Post> posts = dataHandler.GetAllPosts();
+
+            int pageSize = 5;
+
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(posts, pageNumber ?? 1, pageSize);
+            return View(paginatedPosts);
         }
 
-        public IActionResult SignUp()
+        [Authorize]
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Posts(string sortOrder, int? pageNumber)
         {
-            ViewBag.Message = "Sign Up Page";
+            // Unused
+            ViewData["CurrentSort"] = sortOrder;
+
+            ViewBag.Message = "Post Blog Page";
+
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+
+            DataHandler dataHandler = new DataHandler();
+            List<Post> userPosts = dataHandler.GetUserPosts(userId);
+
+            /*
+            Used in PaginatedList<Post>.CreateAsync
+            DataLibrary.DataAccess.EFBlogContext _context = new DataLibrary.DataAccess.EFBlogContext();
+            var posts = _context.Posts.Where(p => p.UserId == userId);
+            string postsType = posts.GetType().ToString();
+            // "Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[DataLibrary.Models.Post]"
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.CreateAsync(posts, pageNumber ?? 1, pageSize);
+            */
+
+            int pageSize = 5;
+            
+            PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(userPosts, pageNumber ?? 1, pageSize);
+            return View(paginatedPosts);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Post()
+        {
+
+            ViewBag.Message = "Post Blog Page";
 
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignUp(Models.User model)
+        public IActionResult Post(Models.VMPost model)
         {
             if (ModelState.IsValid)
             {
-                UserProcessor.CreateUser(
-                    model.Username, 
-                    model.Password);
+                DataLibrary.Models.Post newPost = new Post();
+
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                var userId = claim.Value;
+                if (userId == null)
+                {
+                    // Couldn't find logged in user!
+                    return Error();
+                }
+
+                newPost.UserId = userId;
+                newPost.Title = model.Title;
+                newPost.Content = model.Content;
+
+                DataHandler dataHandler = new DataHandler();
+                dataHandler.AddPost(newPost);
+
                 return RedirectToAction("Index");
             }
-
-            return View();
+            return View(); // send user to posts or something.
         }
     }
 }

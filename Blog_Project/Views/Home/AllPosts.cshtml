@@ -1,0 +1,39 @@
+﻿@model PaginatedList<DataLibrary.Models.Post>
+<link href="~/css/styles.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewData["Title"] = "All Posts";
+}
+
+<h1>Posts</h1>
+
+@foreach (var item in Model)
+{
+    <div class="center">
+        <h3>
+            @Html.DisplayFor(modelItem => item.Title)
+        </h3>
+        <h5>
+            @Html.DisplayFor(modelItem => item.Content)
+        </h5>
+        <p>
+            @Html.DisplayFor(modelItem => item.Created) -
+            @Html.DisplayFor(modelItem => item.UserId)
+        </p>
+    </div>
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="AllPosts"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="AllPosts"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

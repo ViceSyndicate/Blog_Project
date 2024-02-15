@@ -1,7 +1,18 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using DataLibrary.DataAccess;
+using DataLibrary;
 var builder = WebApplication.CreateBuilder(args);
+//var connectionString = builder.Configuration.GetConnectionString("EFBlogContextConnection") ?? throw new InvalidOperationException("Connection string 'EFBlogContextConnection' not found.");
+
+builder.Services.AddDbContext<EFBlogContext>();
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<EFBlogContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -22,5 +33,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();

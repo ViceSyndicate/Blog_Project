@@ -45,9 +45,13 @@ namespace Blog_Project.Controllers
             DataHandler dataHandler = new DataHandler();
             List<Post> posts = dataHandler.GetAllPosts();
 
+            // Create List<VMPostListing> Insert vals from posts
+            // Get Username with GetUser and fill it in to each VMPostListing obj.
+
             int pageSize = 5;
 
             PaginatedList<Post> paginatedPosts = await PaginatedList<Post>.Create(posts, pageNumber ?? 1, pageSize);
+
             return View(paginatedPosts);
         }
 
